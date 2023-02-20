@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>checkpoint</title>
+  </head>
+  <body>
+  <input type ="text" id="search">
+  <button id="btn">search</button>
+  <div id="pokemon-info"></div>
+  <img id="sprite" src="">
+  <script >
+    const inputSearch = document.getElementById("search");
+const button = document.getElementById("btn");
+const pokemonInfo = document.getElementById("pokemon-info");
+
+
+async function getPokemonData(pokemonData) {
+    try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonData}`);
+    const data = await response.json();
+    return data;
+    } catch(error){
+        throw new Error(`il pokemon ${pokemonData} non esiste`)
+    }
+}
+
+async function displayData() {
+  try{
+   const pokemon = inputSearch.value 
+   const pokemonData = await getPokemonData(pokemon);
+   console.log(pokemonData);
+   const img = document.getElementById("sprite");
+   img.src = pokemonData.sprites.front_default;
+   pokemonInfo.innerHTML = `
+   <h1>${pokemonData.name}></h1>
+   <p> Esperienze di base: ${pokemonData.base_experience}</p>
+   <p> Abilita" ${pokemonData.abilities.map(ability => ability.ability.name)} </p>
+   `;
+ } catch(error) {
+  pokemonInfo.innerHTML = `<p>${error.message} </p>`;
+ }
+} 
+
+
+button.addEventListener("click",displayData )
+  </script>
+
+  </body>
+  
+</html>
